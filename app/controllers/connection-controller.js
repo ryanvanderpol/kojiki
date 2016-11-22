@@ -13,6 +13,9 @@ angular.module('kojiki').controller('ConnectionController', ['$scope', '$rootSco
     $scope.connection = null;
 
     $scope.save = function(){
+    	if($scope.connection.isUri){
+    		$scope.connection.parseUri($scope.connection.uri);
+    	}
         if($scope.connection.isValid()){
             connectionService.connect($scope.connection);
             $scope.visible = false;

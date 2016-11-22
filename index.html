@@ -14,9 +14,9 @@
 				<i class="icon-pie-chart"></i>
 				<span>Kojiki</span>
 			</div>
-			<div class="session" ng-repeat="session in sessions" ng-click="activateSession(session)">
+			<div class="session" ng-repeat="session in sessions" ng-click="activateSession(session)" ng-class="{ active: activeSession == session }">
 				<i class="icon-data"></i>
-				<span>postgreSQL</span>
+				<span>{{ session.connection.name || 'New' }}</span>
 			</div>
 			<div class="session new" ng-click="addSession()">
 				<i class="icon-plus"></i>
@@ -24,8 +24,11 @@
 		</div>
 
 		<aside class="sidebar" ng-controller="SidebarController">
-			<div class="connection-list">
+			<div class="connection">
 				<div class="selected" ng-click="editConnection()">{{ connection.name || 'New Connection' }}</div>
+			</div>
+			<div class="database">
+			{{ connection.database }}
 			</div>
 			<div class="navigation">
 				<ul class="schema">
@@ -39,7 +42,7 @@
 
 			<div class="tabs">
 				<div class="tab" ng-repeat="query in session.queries" ng-class="{ active: selectedQuery == query }" ng-click="selectQuery(query)">
-					{{ query.text || 'New Query' }}
+					{{ query.text || 'New Query' | limitTo:20 }}{{query.text.length > 20 ? '&hellip;' : ''}}
 					<i class="icon-close close" ng-click="removeQuery(query)"></i>
 				</div>
 				<div class="tab new" ng-click="addQuery()"><i class="icon-plus"></i></div>
@@ -48,7 +51,7 @@
 			<div class="content">
 
 				<div class="query">
-					<textarea ng-model="selectedQuery.text" ng-keydown="onQueryKeypress($event)"></textarea>
+					<ui-codemirror ui-codemirror-opts="editorOptions" ng-model="selectedQuery.text" ng-keydown="onQueryKeypress($event)"></ui-codemirror>
 
 					<div class="actions">
 						<button type="button" ng-click="go()">Go</button>

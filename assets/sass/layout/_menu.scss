@@ -36,13 +36,13 @@
         i {
             display: block;
             text-align: center;
-            color: $white;
+            color: darken($white, 20%);
             font-size: 2em;
         }
         span {
             text-align: center;
             display: block;
-            color: $white;
+            color: darken($white, 20%);
             font-size: 0.8em;
         }
 
@@ -51,7 +51,18 @@
         }
 
         &:hover {
-            color: $action-color;
+            i, span {
+                color: $white;
+            }
+        }
+
+        &.active {
+            i {
+                color: $action-color;
+            }
+            span {
+                color: $action-color;
+            }
         }
     }
 }

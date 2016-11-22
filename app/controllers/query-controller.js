@@ -11,6 +11,15 @@ angular.module('kojiki').controller('QueryController', ['$scope', '$filter', 'Se
 
     $scope.selectedQuery = null;
 
+    $scope.editorOptions = {
+        lineWrapping : false,
+        lineNumbers: true,
+        indentUnit: 4,
+        smartIndent: true,
+        indentWithTabs: true,
+        mode: 'text/x-pgsql'
+    };
+
     $scope.$watch('selectedQuery.text', () => SessionService.save());
 
     $scope.go = function(){
@@ -79,6 +88,8 @@ angular.module('kojiki').controller('QueryController', ['$scope', '$filter', 'Se
             $scope.session = session;
             $scope.connection = session.connection;
             $scope.client = $scope.connection.getClient();
+
+            console.log($scope.client.connection);
 
             if($scope.session.queries.length == 0){
                 $scope.addQuery();
