@@ -1,0 +1,54 @@
+// Strip default select menu display,
+// retain default behavior. Requires
+// `select` to be wrapped with .dropdown
+.select {
+    border: 1px solid $base-border-color;
+    border-radius: $base-border-radius;
+    position: relative;
+    cursor: pointer;
+    background-color: white;
+    
+    &:hover {
+        border-color: darken($base-border-color, 20%);
+    }
+
+    // Disable default select presentation
+    select {
+        border: 0;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background: transparent;
+        width: 100%;
+        outline: none;
+        text-overflow: '';
+        margin-bottom: 0;
+        padding: 8px;
+        position: relative;
+        z-index: 2;
+
+        // Disable IE browser presentation
+        &::-ms-expand {
+            display: none;
+        }
+
+        // No FF focus
+        &:-moz-focusring {
+            color: transparent;
+            text-shadow: none;
+        }
+    }
+
+    // Font Awesome chevron
+    &:after {
+        position: absolute;
+        z-index: 1;
+        font-style: normal;
+        font-weight: normal;
+        font-family: FontAwesome;
+        content: '\f078';
+        top: 7px;
+        right: 8px;
+        color: $dark-gray;
+    }
+}

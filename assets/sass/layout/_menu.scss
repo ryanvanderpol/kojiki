@@ -1,0 +1,57 @@
+.menu {
+    $size: 100px;
+
+    position: fixed;
+    //position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: $size;
+    background: $super-dark-blue;
+
+    .brand {
+        height: $size;
+
+        background: $action-color;
+        color: $white;
+
+        text-align: center;
+        i {
+            font-size: 2em;
+            line-height: 1em;
+        }
+        span {
+            display: block;
+            margin-top: -10px;
+        }
+        font-size: 1.5em;
+        padding-top: 13px;
+    }
+
+    .session {
+        height: $size;
+        padding: 10px;
+        cursor: pointer;
+
+        i {
+            display: block;
+            text-align: center;
+            color: $white;
+            font-size: 2em;
+        }
+        span {
+            text-align: center;
+            display: block;
+            color: $white;
+            font-size: 0.8em;
+        }
+
+        &.new {
+            padding-top: 30px;
+        }
+
+        &:hover {
+            color: $action-color;
+        }
+    }
+}

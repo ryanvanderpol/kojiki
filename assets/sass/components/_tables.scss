@@ -1,0 +1,35 @@
+.data {
+    max-width: 100%;
+    overflow-x: scroll;
+    
+    table {
+
+        width: auto;
+        font-size: 0.8em;
+        
+        &.bordered {
+            border: 1px solid $light-gray;
+
+            thead {
+                tr {
+                    th {
+                        border-bottom-width: 2px;
+                        border: 1px solid $light-gray;
+                        padding: 3px;
+                    }
+                }
+            }
+
+            tbody {
+                tr {
+                    td {
+                        padding: 5px;
+                        border: 1px solid $light-gray;
+                        line-height: 1em;
+                        white-space: nowrap;
+                    }
+                }
+            }
+        }
+    }
+}
