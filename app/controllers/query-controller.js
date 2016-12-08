@@ -29,12 +29,9 @@ angular.module('kojiki').controller('QueryController', ['$scope', '$filter', 'Se
         }
 
         $scope.client.query(query)
-              .then(results => {
-                    $scope.readResults(results.rows);
-              })
-              .catch(err => {
-                    console.log(err);
-              });
+              .tap(results => console.log(results))
+              .then(results => $scope.readResults(results.rows))
+              .catch(err => console.log(err));
     };
 
     $scope.readResults = function(rows){
@@ -97,6 +94,11 @@ angular.module('kojiki').controller('QueryController', ['$scope', '$filter', 'Se
             else {
                 $scope.selectQuery($scope.session.queries[0]);
             }
+        });
+
+        $scope.$on('session.activatequery', (event, query) => {
+            $scope.selectQuery(query);
+            $scope.go();
         });
     };
 

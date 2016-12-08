@@ -1,11 +1,12 @@
 const _ = require('underscore'),
       knex = require('knex'),
       angular = require('angular'),
-      Client = require('../../lib/data/client')
+      Client = require('../../lib/data/client'),
+      Query = require('../../lib/data/query'),
       config = new (require('electron-config'))();
 
 
-angular.module('kojiki').controller('SidebarController', ['$scope', '$rootScope', 'ConnectionService', function($scope, $rootScope, connectionService){
+angular.module('kojiki').controller('SidebarController', ['$scope', '$rootScope', 'ConnectionService', 'SessionService', function($scope, $rootScope, connectionService, SessionService){
     
     $scope.session = null;
     $scope.connection = null;
@@ -15,6 +16,13 @@ angular.module('kojiki').controller('SidebarController', ['$scope', '$rootScope'
 
     $scope.selectTable = function(table){
     	console.log(table);
+    };
+
+    $scope.selectTableRows = function(table){
+    	let q = new Query();
+    	q.text = `SELECT * FROM ${table} limit 100`;
+    	$scope.session.queries.push(q);
+    	SessionService.activateQuery(q);
     };
 
     $scope.editConnection = function(){

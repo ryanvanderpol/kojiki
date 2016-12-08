@@ -23,11 +23,23 @@
             font-size: 0.9em;
 
             li {
-                cursor: pointer;
 
-                &:hover {
-                    color: $action-color;
+                &.table {
+                    position: relative;
+
+                    .actions {
+                        position: absolute;
+                        right: 0;
+                        top: 5px;
+                        cursor: pointer;
+                    }
+
+                    &:hover {
+                        color: $action-color;
+                    }
                 }
+
+
             }
         }
     }

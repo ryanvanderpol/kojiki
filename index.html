@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>Kojiki</title>
-		<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Roboto+Condensed|Ubuntu" rel="stylesheet">
 		<link rel="stylesheet" href="dist/css/application.css">
 		<link href="https://file.myfontastic.com/fwyBU77beddJZdhE3NRnue/icons.css" rel="stylesheet">
 	</head>
@@ -33,7 +33,19 @@
 			<div class="navigation">
 				<ul class="schema">
 					<li>Tables</li>
-					<li ng-repeat="table in tables | orderBy:'tablename'" ng-click="selectTable(table.tablename)">{{ table.tablename }}</li>
+					<li class="table" ng-repeat="table in tables | orderBy:'tablename'" ng-click="selectTable(table.tablename)">
+						<i class="icon-table"></i>
+						{{ table.tablename }}
+						<div menu class="actions dropdown">
+							<div class="dropdown-container">
+								<p class="dropdown-button"><i class="icon-ellipsis-v"></i></p>
+								<ul class="dropdown-menu dropdown-select">
+									<li ng-click="selectTableRows(table.tablename)">Select first 100 rows...</li>
+								</ul>
+							</div>
+						</div>
+						
+					</li>
 				</ul>
 			</div>
 		</aside>

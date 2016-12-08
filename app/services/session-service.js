@@ -48,6 +48,10 @@ angular.module('kojiki').factory('SessionService', ['$rootScope', '$timeout', fu
             getActiveSession(){
                 return this.activeSession;
             }
+
+            activateQuery(query){
+                $timeout(() => $rootScope.$broadcast('session.activatequery', query));
+            }
         }
 
         return new Service();

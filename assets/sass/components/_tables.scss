@@ -6,6 +6,8 @@
 
         width: auto;
         font-size: 0.8em;
+
+        -webkit-user-select: text;
         
         &.bordered {
             border: 1px solid $light-gray;

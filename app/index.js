@@ -8,6 +8,7 @@ const codemirror = require('codemirror'),
       AppController = require('./controllers/app-controller'),
       QueryController = require('./controllers/query-controller'),
       SidebarController = require('./controllers/sidebar-controller'),
-      ConnectionController = require('./controllers/connection-controller');
+      ConnectionController = require('./controllers/connection-controller'),
+      Menu = require('./directives/menu');
 
 window.CodeMirror = codemirror;
