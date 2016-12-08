@@ -3,13 +3,16 @@ const _ = require('underscore'),
       Query = require('../../lib/data/query'),
       config = new (require('electron-config'))();
 
-angular.module('kojiki').controller('QueryController', ['$scope', '$filter', 'SessionService', function($scope, $filter, SessionService){
+angular.module('kojiki').controller('QueryController', ['$scope', '$timeout', 'SessionService', function($scope, $timeout, SessionService){
     
     $scope.session = null;
     $scope.connection = null;
     $scope.client = null;
 
     $scope.selectedQuery = null;
+
+    $scope.error = null;
+    $scope.working = false;
 
     $scope.editorOptions = {
         lineWrapping : false,
@@ -28,22 +31,33 @@ angular.module('kojiki').controller('QueryController', ['$scope', '$filter', 'Se
             query = $scope.selectedQuery.text;
         }
 
+        $scope.working = true;
         $scope.client.query(query)
               .tap(results => console.log(results))
-              .then(results => $scope.readResults(results.rows))
-              .catch(err => console.log(err));
+              .then(results => $scope.readResults(results))
+              .then(() => $timeout(() => { $scope.error = null; $scope.working = false; }))
+              .catch(err => $timeout(() => $scope.onError(err)));
     };
 
-    $scope.readResults = function(rows){
-        $scope.selectedQuery.results = rows;
+    $scope.onError = function(err){
+        $scope.working = false;
+        console.log(err.toString());
+        $scope.error = err.message;
+    };
 
-        if(rows && rows.length > 0){
-            var ex = rows[0];
-            $scope.selectedQuery.columns = _.keys(ex);
-        }
+    $scope.readResults = function(results){
+        let rows = results.rows;
+        let cols = results.fields;
 
-        // i think this is necessary since we run the query async
-        $scope.$apply();
+        $scope.selectedQuery.columns = [];
+        $scope.selectedQuery.results = [];
+
+        $timeout(() => {
+            if(cols && cols.length > 0){
+                $scope.selectedQuery.results = rows;
+                $scope.selectedQuery.columns = cols.map(c => c.name);
+            }
+        });
     };
 
     $scope.onQueryKeypress = function($event){

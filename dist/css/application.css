@@ -200,6 +200,60 @@ picture {
   margin: 0;
   max-width: 100%; }
 
+/*@include keyframes(spin) {
+    0% { @include transform(0deg); } 
+    100% { @include transform(360deg); }
+}
+
+.spin {
+    @include animation(spin 1.0s infinite);
+}
+*/
+.spin {
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  -webkit-animation-name: spin;
+  -webkit-animation-duration: 2000ms;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+  -moz-animation-name: spin;
+  -moz-animation-duration: 2000ms;
+  -moz-animation-iteration-count: infinite;
+  -moz-animation-timing-function: linear;
+  -ms-animation-name: spin;
+  -ms-animation-duration: 2000ms;
+  -ms-animation-iteration-count: infinite;
+  -ms-animation-timing-function: linear;
+  animation-name: spin;
+  animation-duration: 2000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear; }
+
+@-ms-keyframes spin {
+  from {
+    -ms-transform: rotate(0deg); }
+  to {
+    -ms-transform: rotate(360deg); } }
+
+@-moz-keyframes spin {
+  from {
+    -moz-transform: rotate(0deg); }
+  to {
+    -moz-transform: rotate(360deg); } }
+
+@-webkit-keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg); }
+  to {
+    -webkit-transform: rotate(360deg); } }
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg); }
+  to {
+    transform: rotate(360deg); } }
+
 body {
   float: left;
   display: block;
@@ -254,6 +308,78 @@ body {
       color: #05CB95; }
     .menu .session.active span {
       color: #05CB95; }
+
+.flash-alert {
+  background-color: #fff6bf;
+  color: white;
+  display: block;
+  margin-bottom: 0.75em;
+  padding: 0.75em;
+  border-radius: 3px; }
+  .flash-alert a {
+    color: white;
+    text-decoration: underline; }
+    .flash-alert a:focus, .flash-alert a:hover {
+      color: #cccccc; }
+  .flash-alert .dismiss {
+    position: absolute;
+    top: 14px;
+    right: 20px; }
+
+.flash-error {
+  background-color: #E7575A;
+  color: white;
+  display: block;
+  margin-bottom: 0.75em;
+  padding: 0.75em;
+  border-radius: 3px; }
+  .flash-error a {
+    color: white;
+    text-decoration: underline; }
+    .flash-error a:focus, .flash-error a:hover {
+      color: #cccccc; }
+  .flash-error .dismiss {
+    position: absolute;
+    top: 14px;
+    right: 20px; }
+  .flash-error ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none; }
+
+.flash-notice {
+  background-color: #e5edf8;
+  color: white;
+  display: block;
+  margin-bottom: 0.75em;
+  padding: 0.75em;
+  border-radius: 3px; }
+  .flash-notice a {
+    color: white;
+    text-decoration: underline; }
+    .flash-notice a:focus, .flash-notice a:hover {
+      color: #cccccc; }
+  .flash-notice .dismiss {
+    position: absolute;
+    top: 14px;
+    right: 20px; }
+
+.flash-success {
+  background-color: #05CB95;
+  color: white;
+  display: block;
+  margin-bottom: 0.75em;
+  padding: 0.75em;
+  border-radius: 3px; }
+  .flash-success a {
+    color: white;
+    text-decoration: underline; }
+    .flash-success a:focus, .flash-success a:hover {
+      color: #cccccc; }
+  .flash-success .dismiss {
+    position: absolute;
+    top: 14px;
+    right: 20px; }
 
 .dropdown {
   display: inline-block;
@@ -624,15 +750,23 @@ body {
   .main .content {
     margin-top: 50px;
     overflow-y: scroll; }
+    .main .content .flash {
+      margin: 10px; }
     .main .content .query textarea {
       height: 200px;
       font-family: 'Source Code Pro', monospace; }
     .main .content .query .CodeMirror {
       border-bottom: 1px solid #ddd;
       height: 200px; }
+    .main .content .query .resizer {
+      height: 4px;
+      background: #ddd;
+      cursor: ns-resize; }
     .main .content .query .actions {
       text-align: right;
       padding: 10px; }
+      .main .content .query .actions .status {
+        float: left; }
     .main .content .data {
       padding: 10px; }
 

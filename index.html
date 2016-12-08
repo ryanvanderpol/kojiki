@@ -62,11 +62,19 @@
 
 			<div class="content">
 
+				<div class="flash flash-error" ng-if="error">
+				{{ error }}
+				</div>
+
 				<div class="query">
 					<ui-codemirror ui-codemirror-opts="editorOptions" ng-model="selectedQuery.text" ng-keydown="onQueryKeypress($event)"></ui-codemirror>
 
 					<div class="actions">
-						<button type="button" ng-click="go()">Go</button>
+						<span class="status">
+							<span ng-if="working">Running query...</span>
+							<span ng-if="!working">Finished. Returned {{ selectedQuery.results.length }} rows.</span>
+						</span>
+						<button type="button" class="" ng-click="go()">Go</button>
 					</div>
 				</div>
 

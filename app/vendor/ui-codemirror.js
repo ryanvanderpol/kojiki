@@ -1,5 +1,7 @@
 'use strict';
 
+let $ = require('jquery');
+
 /**
  * Binds a CodeMirror widget to a <textarea> element.
  */
@@ -75,6 +77,33 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
         iElement.append(cm_el);
       }, codemirrorOptions);
     }
+
+    var resizer = $('<div class="resizer"></div>');
+    $(iElement).append(resizer);
+
+    resizer.on('mousedown', (e) => {
+
+      let startingY = e.pageY;
+
+      let drag = function(e){
+        var diff = e.pageY - startingY;
+        startingY = e.pageY;
+
+        let height = codemirrot.getWrapperElement().clientHeight;
+        codemirrot.setSize(null, height+diff+1);
+
+        $('body').style.cursor = 'ns-resize';
+      
+      };
+
+      // cancel events when mouse button is released
+      let mouseup = function(e){
+        $('body').style.cursor = undefined;
+        $('body').off('mouseup', mouseup).off('mousemove', drag);
+      };
+
+      $('body').on('mouseup', mouseup).on('mousemove', drag);
+    });
 
     return codemirrot;
   }

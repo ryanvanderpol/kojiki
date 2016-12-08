@@ -57,6 +57,10 @@
         margin-top: 50px;
         overflow-y: scroll;
 
+        .flash {
+            margin: 10px;
+        }
+
         .query {
             //border-top: 3px solid $action-color;
             //padding: 10px;
@@ -71,9 +75,19 @@
                 height: 200px;
             }
 
+            .resizer {
+                height: 4px;
+                background: $light-gray;
+                cursor: ns-resize;
+            }
+
             .actions {
                 text-align: right;
                 padding: 10px;
+
+                .status {
+                    float: left
+                }
             }
         }
 
