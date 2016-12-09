@@ -15,165 +15,165 @@ angular.module('ui.codemirror', [])
 function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
 
   return {
-    restrict: 'EA',
-    require: '?ngModel',
-    compile: function compile() {
+	restrict: 'EA',
+	require: '?ngModel',
+	compile: function compile() {
 
-      // Require CodeMirror
-      if (angular.isUndefined(window.CodeMirror)) {
-        throw new Error('ui-codemirror needs CodeMirror to work... (o rly?)');
-      }
+	  // Require CodeMirror
+	  if (angular.isUndefined(window.CodeMirror)) {
+		throw new Error('ui-codemirror needs CodeMirror to work... (o rly?)');
+	  }
 
-      return postLink;
-    }
+	  return postLink;
+	}
   };
 
   function postLink(scope, iElement, iAttrs, ngModel) {
 
-    var codemirrorOptions = angular.extend(
-      { value: iElement.text() },
-      uiCodemirrorConfig.codemirror || {},
-      scope.$eval(iAttrs.uiCodemirror),
-      scope.$eval(iAttrs.uiCodemirrorOpts)
-    );
+	var codemirrorOptions = angular.extend(
+	  { value: iElement.text() },
+	  uiCodemirrorConfig.codemirror || {},
+	  scope.$eval(iAttrs.uiCodemirror),
+	  scope.$eval(iAttrs.uiCodemirrorOpts)
+	);
 
-    var codemirror = newCodemirrorEditor(iElement, codemirrorOptions);
+	var codemirror = newCodemirrorEditor(iElement, codemirrorOptions);
 
-    configOptionsWatcher(
-      codemirror,
-      iAttrs.uiCodemirror || iAttrs.uiCodemirrorOpts,
-      scope
-    );
+	configOptionsWatcher(
+	  codemirror,
+	  iAttrs.uiCodemirror || iAttrs.uiCodemirrorOpts,
+	  scope
+	);
 
-    configNgModelLink(codemirror, ngModel, scope);
+	configNgModelLink(codemirror, ngModel, scope);
 
-    configUiRefreshAttribute(codemirror, iAttrs.uiRefresh, scope);
+	configUiRefreshAttribute(codemirror, iAttrs.uiRefresh, scope);
 
-    // Allow access to the CodeMirror instance through a broadcasted event
-    // eg: $broadcast('CodeMirror', function(cm){...});
-    scope.$on('CodeMirror', function(event, callback) {
-      if (angular.isFunction(callback)) {
-        callback(codemirror);
-      } else {
-        throw new Error('the CodeMirror event requires a callback function');
-      }
-    });
+	// Allow access to the CodeMirror instance through a broadcasted event
+	// eg: $broadcast('CodeMirror', function(cm){...});
+	scope.$on('CodeMirror', function(event, callback) {
+	  if (angular.isFunction(callback)) {
+		callback(codemirror);
+	  } else {
+		throw new Error('the CodeMirror event requires a callback function');
+	  }
+	});
 
-    // onLoad callback
-    if (angular.isFunction(codemirrorOptions.onLoad)) {
-      codemirrorOptions.onLoad(codemirror);
-    }
+	// onLoad callback
+	if (angular.isFunction(codemirrorOptions.onLoad)) {
+	  codemirrorOptions.onLoad(codemirror);
+	}
   }
 
   function newCodemirrorEditor(iElement, codemirrorOptions) {
-    var codemirrot;
+	var codemirrot;
 
-    if (iElement[0].tagName === 'TEXTAREA') {
-      // Might bug but still ...
-      codemirrot = window.CodeMirror.fromTextArea(iElement[0], codemirrorOptions);
-    } else {
-      iElement.html('');
-      codemirrot = new window.CodeMirror(function(cm_el) {
-        iElement.append(cm_el);
-      }, codemirrorOptions);
-    }
+	if (iElement[0].tagName === 'TEXTAREA') {
+	  // Might bug but still ...
+	  codemirrot = window.CodeMirror.fromTextArea(iElement[0], codemirrorOptions);
+	} else {
+	  iElement.html('');
+	  codemirrot = new window.CodeMirror(function(cm_el) {
+		iElement.append(cm_el);
+	  }, codemirrorOptions);
+	}
 
-    var resizer = $('<div class="resizer"></div>');
-    $(iElement).append(resizer);
+	var resizer = $('<div class="resizer"></div>');
+	$(iElement).append(resizer);
 
-    resizer.on('mousedown', (e) => {
+	resizer.on('mousedown', (e) => {
 
-      let startingY = e.pageY;
+	  let startingY = e.pageY;
 
-      let drag = function(e){
-        var diff = e.pageY - startingY;
-        startingY = e.pageY;
+	  let drag = function(e){
+		var diff = e.pageY - startingY;
+		startingY = e.pageY;
 
-        let height = codemirrot.getWrapperElement().clientHeight;
-        codemirrot.setSize(null, height+diff+1);
+		let height = codemirrot.getWrapperElement().clientHeight;
+		codemirrot.setSize(null, height+diff+1);
 
-        $('body').style.cursor = 'ns-resize';
-      
-      };
+		document.body.style.cursor = 'ns-resize';
+	  
+	  };
 
-      // cancel events when mouse button is released
-      let mouseup = function(e){
-        $('body').style.cursor = undefined;
-        $('body').off('mouseup', mouseup).off('mousemove', drag);
-      };
+	  // cancel events when mouse button is released
+	  let mouseup = function(e){
+		$('body').off('mouseup', mouseup).off('mousemove', drag);
+		document.body.style.cursor = 'initial';
+	  };
 
-      $('body').on('mouseup', mouseup).on('mousemove', drag);
-    });
+	  $('body').on('mouseup', mouseup).on('mousemove', drag);
+	});
 
-    return codemirrot;
+	return codemirrot;
   }
 
   function configOptionsWatcher(codemirrot, uiCodemirrorAttr, scope) {
-    if (!uiCodemirrorAttr) { return; }
+	if (!uiCodemirrorAttr) { return; }
 
-    var codemirrorDefaultsKeys = Object.keys(window.CodeMirror.defaults);
-    scope.$watch(uiCodemirrorAttr, updateOptions, true);
-    function updateOptions(newValues, oldValue) {
-      if (!angular.isObject(newValues)) { return; }
-      codemirrorDefaultsKeys.forEach(function(key) {
-        if (newValues.hasOwnProperty(key)) {
+	var codemirrorDefaultsKeys = Object.keys(window.CodeMirror.defaults);
+	scope.$watch(uiCodemirrorAttr, updateOptions, true);
+	function updateOptions(newValues, oldValue) {
+	  if (!angular.isObject(newValues)) { return; }
+	  codemirrorDefaultsKeys.forEach(function(key) {
+		if (newValues.hasOwnProperty(key)) {
 
-          if (oldValue && newValues[key] === oldValue[key]) {
-            return;
-          }
+		  if (oldValue && newValues[key] === oldValue[key]) {
+			return;
+		  }
 
-          codemirrot.setOption(key, newValues[key]);
-        }
-      });
-    }
+		  codemirrot.setOption(key, newValues[key]);
+		}
+	  });
+	}
   }
 
   function configNgModelLink(codemirror, ngModel, scope) {
-    if (!ngModel) { return; }
-    // CodeMirror expects a string, so make sure it gets one.
-    // This does not change the model.
-    ngModel.$formatters.push(function(value) {
-      if (angular.isUndefined(value) || value === null) {
-        return '';
-      } else if (angular.isObject(value) || angular.isArray(value)) {
-        throw new Error('ui-codemirror cannot use an object or an array as a model');
-      }
-      return value;
-    });
+	if (!ngModel) { return; }
+	// CodeMirror expects a string, so make sure it gets one.
+	// This does not change the model.
+	ngModel.$formatters.push(function(value) {
+	  if (angular.isUndefined(value) || value === null) {
+		return '';
+	  } else if (angular.isObject(value) || angular.isArray(value)) {
+		throw new Error('ui-codemirror cannot use an object or an array as a model');
+	  }
+	  return value;
+	});
 
 
-    // Override the ngModelController $render method, which is what gets called when the model is updated.
-    // This takes care of the synchronizing the codeMirror element with the underlying model, in the case that it is changed by something else.
-    ngModel.$render = function() {
-      //Code mirror expects a string so make sure it gets one
-      //Although the formatter have already done this, it can be possible that another formatter returns undefined (for example the required directive)
-      var safeViewValue = ngModel.$viewValue || '';
-      codemirror.setValue(safeViewValue);
-    };
+	// Override the ngModelController $render method, which is what gets called when the model is updated.
+	// This takes care of the synchronizing the codeMirror element with the underlying model, in the case that it is changed by something else.
+	ngModel.$render = function() {
+	  //Code mirror expects a string so make sure it gets one
+	  //Although the formatter have already done this, it can be possible that another formatter returns undefined (for example the required directive)
+	  var safeViewValue = ngModel.$viewValue || '';
+	  codemirror.setValue(safeViewValue);
+	};
 
 
-    // Keep the ngModel in sync with changes from CodeMirror
-    codemirror.on('change', function(instance) {
-      var newValue = instance.getValue();
-      if (newValue !== ngModel.$viewValue) {
-        scope.$evalAsync(function() {
-          ngModel.$setViewValue(newValue);
-        });
-      }
-    });
+	// Keep the ngModel in sync with changes from CodeMirror
+	codemirror.on('change', function(instance) {
+	  var newValue = instance.getValue();
+	  if (newValue !== ngModel.$viewValue) {
+		scope.$evalAsync(function() {
+		  ngModel.$setViewValue(newValue);
+		});
+	  }
+	});
   }
 
   function configUiRefreshAttribute(codeMirror, uiRefreshAttr, scope) {
-    if (!uiRefreshAttr) { return; }
+	if (!uiRefreshAttr) { return; }
 
-    scope.$watch(uiRefreshAttr, function(newVal, oldVal) {
-      // Skip the initial watch firing
-      if (newVal !== oldVal) {
-        $timeout(function() {
-          codeMirror.refresh();
-        });
-      }
-    });
+	scope.$watch(uiRefreshAttr, function(newVal, oldVal) {
+	  // Skip the initial watch firing
+	  if (newVal !== oldVal) {
+		$timeout(function() {
+		  codeMirror.refresh();
+		});
+	  }
+	});
   }
 
 }

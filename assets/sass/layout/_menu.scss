@@ -1,5 +1,6 @@
 .menu {
-    $size: 100px;
+    $size: 80px;
+    $title-bar-height: 22px;
 
     position: fixed;
     //position: absolute;
@@ -10,10 +11,14 @@
     background: $super-dark-blue;
 
     .brand {
-        height: $size;
-
+        height: 115px; // $size + $title-bar-height;
+        font-size: 1.5em;
+        padding-top: 13px + $title-bar-height;
         background: $action-color;
         color: $white;
+        -webkit-app-region: drag;
+        -webkit-user-select: none;
+        cursor: default;
 
         text-align: center;
         i {
@@ -24,8 +29,6 @@
             display: block;
             margin-top: -10px;
         }
-        font-size: 1.5em;
-        padding-top: 13px;
     }
 
     .session {
@@ -47,7 +50,7 @@
         }
 
         &.new {
-            padding-top: 30px;
+            padding-top: 10px;
         }
 
         &:hover {

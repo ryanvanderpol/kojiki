@@ -3,6 +3,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>Kojiki</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 		<link href="https://fonts.googleapis.com/css?family=Roboto+Condensed|Ubuntu" rel="stylesheet">
 		<link rel="stylesheet" href="dist/css/application.css">
 		<link href="https://file.myfontastic.com/fwyBU77beddJZdhE3NRnue/icons.css" rel="stylesheet">
@@ -53,11 +54,13 @@
 		<div class="main" ng-controller="QueryController">
 
 			<div class="tabs">
-				<div class="tab" ng-repeat="query in session.queries" ng-class="{ active: selectedQuery == query }" ng-click="selectQuery(query)">
-					{{ query.text || 'New Query' | limitTo:20 }}{{query.text.length > 20 ? '&hellip;' : ''}}
-					<i class="icon-close close" ng-click="removeQuery(query)"></i>
+				<div class="tab-scroller" ng-style="{ 'width': (200 * session.queries.length + 100) + 'px' }">
+					<div class="tab" ng-repeat="query in session.queries" ng-class="{ active: selectedQuery == query }" ng-click="selectQuery(query)">
+						{{ query.text || 'New Query' | limitTo:20 }}{{query.text.length > 20 ? '&hellip;' : ''}}
+						<i class="icon-close close" ng-click="removeQuery(query)"></i>
+					</div>
+					<div class="tab new" ng-click="addQuery()"><i class="icon-plus"></i></div>
 				</div>
-				<div class="tab new" ng-click="addQuery()"><i class="icon-plus"></i></div>
 			</div>
 
 			<div class="content">

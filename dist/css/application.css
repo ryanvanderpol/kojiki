@@ -271,15 +271,18 @@ body {
   top: 0;
   left: 0;
   bottom: 0;
-  width: 100px;
+  width: 80px;
   background: #1A1C21; }
   .menu .brand {
-    height: 100px;
+    height: 115px;
+    font-size: 1.5em;
+    padding-top: 35px;
     background: #05CB95;
     color: #fff;
-    text-align: center;
-    font-size: 1.5em;
-    padding-top: 13px; }
+    -webkit-app-region: drag;
+    -webkit-user-select: none;
+    cursor: default;
+    text-align: center; }
     .menu .brand i {
       font-size: 2em;
       line-height: 1em; }
@@ -287,7 +290,7 @@ body {
       display: block;
       margin-top: -10px; }
   .menu .session {
-    height: 100px;
+    height: 80px;
     padding: 10px;
     cursor: pointer; }
     .menu .session i {
@@ -301,7 +304,7 @@ body {
       color: #cccccc;
       font-size: 0.8em; }
     .menu .session.new {
-      padding-top: 30px; }
+      padding-top: 10px; }
     .menu .session:hover i, .menu .session:hover span {
       color: #fff; }
     .menu .session.active i {
@@ -688,18 +691,23 @@ body {
   position: fixed;
   float: left;
   width: 225px;
-  margin-left: 100px;
+  margin-left: 80px;
   background: #222733;
   color: #ddd;
   height: 100vh;
   max-height: 100vh;
   overflow-y: scroll; }
+  .sidebar .connection {
+    padding: 10px; }
+  .sidebar .database {
+    padding: 10px; }
   .sidebar .navigation {
     padding: 10px; }
     .sidebar .navigation .schema {
       font-size: 0.9em; }
       .sidebar .navigation .schema li.table {
-        position: relative; }
+        position: relative;
+        cursor: pointer; }
         .sidebar .navigation .schema li.table .actions {
           position: absolute;
           right: 0;
@@ -709,19 +717,27 @@ body {
           color: #05CB95; }
 
 .main {
-  margin-left: 325px;
+  margin-left: 305px;
   height: 100vh; }
   .main .tabs {
     position: fixed;
-    left: 325px;
+    left: 305px;
     top: 0;
     right: 0;
     z-index: 99;
     background: #1A1C21;
     padding-left: 15px;
     height: 50px;
-    border-bottom: 3px solid #05CB95; }
+    border-bottom: 3px solid #05CB95;
+    -webkit-app-region: drag;
+    -webkit-user-select: none;
+    cursor: default;
+    overflow-x: scroll;
+    overflow-y: hidden; }
+    .main .tabs::-webkit-scrollbar {
+      display: none; }
     .main .tabs .tab {
+      -webkit-app-region: no-drag;
       position: relative;
       background: #222733;
       display: inline-block;

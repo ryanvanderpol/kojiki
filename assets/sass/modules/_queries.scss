@@ -1,11 +1,11 @@
 .main {
-    margin-left: 325px;
+    margin-left: 305px;
 
     height: 100vh;
 
     .tabs {
         position: fixed;
-        left: 325px;
+        left: 305px;
         top: 0;
         right: 0;
         z-index: 99;
@@ -14,8 +14,23 @@
         padding-left: 15px;
         height: 50px;
         border-bottom: 3px solid $action-color;
+        -webkit-app-region: drag;
+        -webkit-user-select: none;
+        cursor: default;
+
+        overflow-x: scroll;
+        overflow-y: hidden;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab-scroller {
+
+        }
 
         .tab {
+            -webkit-app-region: no-drag;
             position: relative;
             background: $alt-background-color;
             display: inline-block;

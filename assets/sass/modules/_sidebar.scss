@@ -3,7 +3,7 @@
     position: fixed;
     float: left;
     width: 225px;
-    margin-left: 100px;
+    margin-left: 80px;
 
     background: $alt-background-color;
     color: $alt-font-color;
@@ -12,8 +12,12 @@
     max-height: 100vh;
     overflow-y: scroll;
 
-    .connection-list {
-        
+    .connection {
+        padding: 10px;
+    }
+
+    .database {
+        padding: 10px;
     }
 
     .navigation {
@@ -26,6 +30,7 @@
 
                 &.table {
                     position: relative;
+                    cursor: pointer;
 
                     .actions {
                         position: absolute;
