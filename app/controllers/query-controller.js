@@ -1,4 +1,5 @@
 const _ = require('underscore'),
+      $ = require('jquery'),
       Client = require('../../lib/data/client'),
       Query = require('../../lib/data/query'),
       config = new (require('electron-config'))();
@@ -23,7 +24,26 @@ angular.module('kojiki').controller('QueryController', ['$scope', '$timeout', 'S
         mode: 'text/x-pgsql'
     };
 
+    $scope.gridOptions = {
+        columnDefs: []
+    };
+
     $scope.$watch('selectedQuery.text', () => SessionService.save());
+
+    $scope.$watch('selectedQuery.results', () => {
+        if($scope.selectedQuery){
+            if($scope.selectedQuery.columns){
+                $scope.gridOptions.columnDefs = [];
+                _.each($scope.selectedQuery.columns, col => {
+                    if(col.name) {
+                        $scope.gridOptions.columnDefs.push({ name: col.name, width: 150 });
+                    }
+                });
+            }
+            $scope.gridOptions.data = $scope.selectedQuery.results;
+            $timeout(() => resizeGrid());
+        }
+    });
 
     $scope.go = function(){
         var query = window.getSelection().toString();
@@ -55,7 +75,7 @@ angular.module('kojiki').controller('QueryController', ['$scope', '$timeout', 'S
         $timeout(() => {
             if(cols && cols.length > 0){
                 $scope.selectedQuery.results = rows;
-                $scope.selectedQuery.columns = cols.map(c => c.name);
+                $scope.selectedQuery.columns = cols;
             }
         });
     };
@@ -93,7 +113,7 @@ angular.module('kojiki').controller('QueryController', ['$scope', '$timeout', 'S
         }
     };
 
-    var init = function(){
+    let init = function(){
 
         $scope.$on('session.activate', (event, session) => {
             $scope.session = session;
@@ -114,6 +134,13 @@ angular.module('kojiki').controller('QueryController', ['$scope', '$timeout', 'S
             $scope.selectQuery(query);
             $scope.go();
         });
+
+        $(window).on('resize', () => resizeGrid());
+    };
+
+    let resizeGrid = function(){
+        let height = $(window).height() - $('.data-grid').offset().top - 10; // 10 = bottom padding
+        $('.data-grid').height(height);
     };
 
     init();

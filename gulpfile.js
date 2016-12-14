@@ -8,7 +8,7 @@ var paths = {
     allScss:               './assets/sass/**/*.scss',
     scss:               './assets/sass/application.scss',
     images:             './assets/images/**/*',
-    fonts:              './assets/fonts/**/*',
+    fonts:              ['./assets/fonts/**/*', './node_modules/angular-ui-grid/ui-grid.woff'],
     scripts:            './assets/js/**/*.js', // all scripts for watching
     scripts_vendor:     ['./assets/js/vendor/*.js'],
     scripts_app:        ['./assets/js/*.js', './assets/js/partials/*.js','./assets/js/modules/*.js'],
@@ -41,7 +41,7 @@ gulp.task('images', function(){
 
 gulp.task('fonts', function(){
     return gulp.src(paths.fonts)
-        .pipe(gulp.dest('./dist/fonts'));
+        .pipe(gulp.dest('./dist/css'));
 });
 
 gulp.task('watch', function() {
@@ -50,4 +50,4 @@ gulp.task('watch', function() {
     gulp.watch(paths.fonts, ['fonts']);
 });
 
-gulp.task('default', ['sass', 'scripts']);
+gulp.task('default', ['fonts', 'sass', 'scripts']);

@@ -1,7 +1,7 @@
 .main {
     margin-left: 305px;
-
     height: 100vh;
+    overflow: hidden;
 
     .tabs {
         position: fixed;
@@ -108,6 +108,35 @@
 
         .data {
             padding: 10px;
+
+            .data-grid {
+                -webkit-user-select: text;
+
+                .ui-grid-header-cell {
+                    background: $extra-light-gray;
+                    font-weight: normal;
+                }
+                .ui-grid-menu {
+                    .ui-grid-menu-inner {
+                        ul {
+                            li {
+                                button {
+                                    box-shadow: none;
+                                    border-radius: 0;
+
+                                    &.ui-grid-menu-item-active {
+                                        box-shadow: none;
+                                    }
+
+                                    &:hover {
+                                        box-shadow: none;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 

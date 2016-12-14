@@ -83,18 +83,8 @@
 
 
 				<div class="data">
-					<table class="bordered">
-						<thead>
-							<tr>
-								<th ng-repeat="col in selectedQuery.columns">{{ col }}</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr ng-repeat="row in selectedQuery.results">
-								<td ng-repeat="col in selectedQuery.columns">{{ row[col] }}</td>
-							</tr>
-						</tbody>
-					</table>
+
+					<div ui-grid="gridOptions" class="data-grid" ui-grid-auto-resize ui-grid-resize-columns></div>
 
 				</div>
 			</div>

@@ -1,6 +1,6 @@
 const angular = require('angular');
 
-const app = angular.module('kojiki', ['angular-loading-bar','ui.codemirror']);
+const app = angular.module('kojiki', ['angular-loading-bar','ui.codemirror', 'ui.grid',  'ui.grid.resizeColumns', 'ui.grid.autoResize']);
                                         
 
 app.config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
