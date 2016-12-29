@@ -262,7 +262,8 @@ body {
   padding: 0;
   margin: 0;
   -webkit-user-select: none;
-  font-size: 14px; }
+  font-size: 14px;
+  background: #fff; }
   body:last-child {
     margin-right: 0; }
 
@@ -791,6 +792,8 @@ body {
         .main .content .data .data-grid .ui-grid-header-cell {
           background: #f7f7f7;
           font-weight: normal; }
+        .main .content .data .data-grid .ui-grid-row:nth-child(odd) .ui-grid-cell {
+          background-color: #fff; }
         .main .content .data .data-grid .ui-grid-menu .ui-grid-menu-inner ul li button {
           box-shadow: none;
           border-radius: 0; }

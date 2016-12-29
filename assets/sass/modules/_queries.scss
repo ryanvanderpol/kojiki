@@ -116,6 +116,13 @@
                     background: $extra-light-gray;
                     font-weight: normal;
                 }
+
+                .ui-grid-row:nth-child(odd) {
+                    .ui-grid-cell {
+                        background-color: $white;
+                    }
+                }
+
                 .ui-grid-menu {
                     .ui-grid-menu-inner {
                         ul {

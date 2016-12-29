@@ -14,7 +14,7 @@ let mainWindow
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({ width: 1440, height: 900, titleBarStyle: 'hidden-inset', title: 'Test' /*, frame: false */ })
+  mainWindow = new BrowserWindow({ width: 1440, height: 900, titleBarStyle: 'hidden-inset', title: 'Kojiki', backgroundColor: '#222733' /*, frame: false */ })
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({

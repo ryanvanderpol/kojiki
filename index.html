@@ -70,12 +70,15 @@
 				</div>
 
 				<div class="query">
-					<ui-codemirror ui-codemirror-opts="editorOptions" ng-model="selectedQuery.text" ng-keydown="onQueryKeypress($event)"></ui-codemirror>
+					<div ui-codemirror="{ onLoad : codemirrorLoaded }" ui-codemirror-opts="editorOptions" ng-model="selectedQuery.text" ng-keydown="onQueryKeypress($event)"></div>
 
 					<div class="actions">
 						<span class="status">
 							<span ng-if="working">Running query...</span>
-							<span ng-if="!working">Finished. Returned {{ selectedQuery.results.length }} rows.</span>
+							<div ng-if="!working">
+								<span ng-if="selectedQuery.command == 'SELECT'">Finished. Returned {{ selectedQuery.results.length }} rows.</span>
+								<span ng-if="selectedQuery.command == 'DELETE'">Finished. Deleted {{ selectedQuery.affectedRows }} rows.</span>
+							</div>
 						</span>
 						<button type="button" class="" ng-click="go()">Go</button>
 					</div>

@@ -9,6 +9,7 @@ angular.module('kojiki').controller('QueryController', ['$scope', '$timeout', 'S
     $scope.session = null;
     $scope.connection = null;
     $scope.client = null;
+    $scope.codemirrorInstance = null;
 
     $scope.selectedQuery = null;
 
@@ -36,17 +37,19 @@ angular.module('kojiki').controller('QueryController', ['$scope', '$timeout', 'S
                 $scope.gridOptions.columnDefs = [];
                 _.each($scope.selectedQuery.columns, col => {
                     if(col.name) {
-                        $scope.gridOptions.columnDefs.push({ name: col.name, width: 150 });
+                        $scope.gridOptions.columnDefs.push({ name: col.name, displayName: col.name, width: 150 });
                     }
                 });
             }
             $scope.gridOptions.data = $scope.selectedQuery.results;
             $timeout(() => resizeGrid());
+            // save the updated results to the session file
+            SessionService.save();
         }
     });
 
     $scope.go = function(){
-        var query = window.getSelection().toString();
+        var query = $scope.codemirrorInstance.getSelection();
         if(!query){
             query = $scope.selectedQuery.text;
         }
@@ -67,10 +70,12 @@ angular.module('kojiki').controller('QueryController', ['$scope', '$timeout', 'S
 
     $scope.readResults = function(results){
         let rows = results.rows;
-        let cols = results.fields;
+        let cols = _.uniq(results.fields, col => col.name);
 
         $scope.selectedQuery.columns = [];
         $scope.selectedQuery.results = [];
+        $scope.selectedQuery.command = results.command;
+        $scope.selectedQuery.affectedRows = results.rowCount;
 
         $timeout(() => {
             if(cols && cols.length > 0){
@@ -141,6 +146,10 @@ angular.module('kojiki').controller('QueryController', ['$scope', '$timeout', 'S
     let resizeGrid = function(){
         let height = $(window).height() - $('.data-grid').offset().top - 10; // 10 = bottom padding
         $('.data-grid').height(height);
+    };
+
+    $scope.codemirrorLoaded = function(cm){
+        $scope.codemirrorInstance = cm;
     };
 
     init();
