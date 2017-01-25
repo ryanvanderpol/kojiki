@@ -7,6 +7,7 @@
     position: relative;
     cursor: pointer;
     background-color: white;
+    margin-bottom: $base-spacing;
     
     &:hover {
         border-color: darken($base-border-color, 20%);
@@ -39,14 +40,14 @@
         }
     }
 
-    // Font Awesome chevron
+    // chevron icon
     &:after {
         position: absolute;
         z-index: 1;
         font-style: normal;
         font-weight: normal;
-        font-family: FontAwesome;
-        content: '\f078';
+        font-family: 'kojiki';
+        content: '\62';
         top: 7px;
         right: 8px;
         color: $dark-gray;

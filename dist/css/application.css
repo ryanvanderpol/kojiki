@@ -108,6 +108,7 @@ select {
 input[type="text"],
 input[type="password"] {
   border: none;
+  border-left: 3px solid #ddd;
   box-shadow: none; }
   input[type="text"]:focus,
   input[type="password"]:focus {
@@ -399,8 +400,7 @@ body {
   */ }
   .dropdown .dropdown-container {
     display: inline-block;
-    position: relative;
-    text-align: center; }
+    position: relative; }
   .dropdown .dropdown-description {
     background: #fff;
     border-bottom: 1px solid #fff;
@@ -597,7 +597,8 @@ body {
   border-radius: 3px;
   position: relative;
   cursor: pointer;
-  background-color: white; }
+  background-color: white;
+  margin-bottom: 1.5em; }
   .select:hover {
     border-color: #aaaaaa; }
   .select select {
@@ -623,8 +624,8 @@ body {
     z-index: 1;
     font-style: normal;
     font-weight: normal;
-    font-family: FontAwesome;
-    content: '\f078';
+    font-family: 'kojiki';
+    content: '\62';
     top: 7px;
     right: 8px;
     color: #333; }
@@ -687,6 +688,8 @@ body {
   max-width: 400px;
   padding: 20px;
   max-height: none; }
+  .connection .modal-inner .segmented-tabs {
+    margin-bottom: 15px; }
 
 .sidebar {
   position: fixed;
@@ -697,24 +700,68 @@ body {
   color: #ddd;
   height: 100vh;
   max-height: 100vh;
-  overflow-y: scroll; }
+  overflow-y: scroll;
+  padding-left: 5px;
+  cursor: default; }
   .sidebar .connection {
     padding: 10px; }
-  .sidebar .database {
-    padding: 10px; }
+    .sidebar .connection .selected .connection-name {
+      font-size: 1.5em;
+      white-space: nowrap;
+      overflow: hidden; }
+    .sidebar .connection .selected .dropdown {
+      font-size: 1rem; }
+      .sidebar .connection .selected .dropdown .dropdown-button {
+        text-align: left; }
+        .sidebar .connection .selected .dropdown .dropdown-button i {
+          top: 15px;
+          padding-left: 10px;
+          color: rgba(221, 221, 221, 0.5); }
+      .sidebar .connection .selected .dropdown .dropdown-menu {
+        text-align: left;
+        right: initial;
+        top: 40px;
+        width: 200px; }
+    .sidebar .connection .database .status {
+      border-radius: 20px;
+      border: 2px solid #ddd;
+      display: inline-block;
+      height: 11px;
+      width: 11px;
+      margin-right: 4px; }
+      .sidebar .connection .database .status.connected {
+        border: none;
+        background: #05CB95; }
   .sidebar .navigation {
     padding: 10px; }
     .sidebar .navigation .schema {
       font-size: 0.9em; }
+      .sidebar .navigation .schema li.heading {
+        text-transform: uppercase; }
+        .sidebar .navigation .schema li.heading .count {
+          color: rgba(221, 221, 221, 0.5); }
+        .sidebar .navigation .schema li.heading .icon-refresh {
+          float: right;
+          cursor: pointer; }
+          .sidebar .navigation .schema li.heading .icon-refresh:hover {
+            color: #05CB95; }
       .sidebar .navigation .schema li.table {
-        position: relative;
-        cursor: pointer; }
+        position: relative; }
+        .sidebar .navigation .schema li.table .table-name {
+          display: inline-block;
+          width: 180px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap; }
         .sidebar .navigation .schema li.table .actions {
           position: absolute;
           right: 0;
           top: 5px;
           cursor: pointer; }
-        .sidebar .navigation .schema li.table:hover {
+          .sidebar .navigation .schema li.table .actions .dropdown-menu > li {
+            text-align: left; }
+        .sidebar .navigation .schema li.table .dropdown-button:hover {
+          cursor: pointer;
           color: #05CB95; }
 
 .main {

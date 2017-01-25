@@ -10,7 +10,7 @@
 	</head>
 	<body ng-controller="AppController as app">
 
-		<div class="menu">
+		<aside class="menu">
 			<div class="brand">
 				<i class="icon-pie-chart"></i>
 				<span>Kojiki</span>
@@ -22,26 +22,41 @@
 			<div class="session new" ng-click="addSession()">
 				<i class="icon-plus"></i>
 			</div>
-		</div>
+		</aside>
 
 		<aside class="sidebar" ng-controller="SidebarController">
 			<div class="connection">
-				<div class="selected" ng-click="editConnection()">{{ connection.name || 'New Connection' }}</div>
-			</div>
-			<div class="database">
-			{{ connection.database }}
+				<div class="selected">
+					<div menu class="dropdown">
+						<div class="dropdown-container">
+							<p class="dropdown-button">
+								<span class="connection-name">{{ connection.name || 'New Connection' }}</span>
+								<i class="icon-chevron-down"></i>
+							</p>
+							<ul class="dropdown-menu dropdown-select">
+								<li ng-click="editConnection()">Edit Connection</li>
+								<li ng-click="removeConnection()">Remove Connection</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="database"><span class="status" ng-class="{ connected: connected }"></span> {{ connection.database }}</div>
 			</div>
 			<div class="navigation">
 				<ul class="schema">
-					<li>Tables</li>
+					<li class="heading">
+						Tables <span class="count"> ({{ tables.length }})</span>
+						<i class="icon-refresh" ng-click="refreshTables()"></i>
+					</li>
 					<li class="table" ng-repeat="table in tables | orderBy:'tablename'" ng-click="selectTable(table.tablename)">
-						<i class="icon-table"></i>
-						{{ table.tablename }}
+						<span class="table-name" title="{{ table.tablename }}">{{ table.tablename }}</span>
 						<div menu class="actions dropdown">
 							<div class="dropdown-container">
-								<p class="dropdown-button"><i class="icon-ellipsis-v"></i></p>
+								<p class="dropdown-button"><i class="icon-chevron-down"></i></p>
 								<ul class="dropdown-menu dropdown-select">
-									<li ng-click="selectTableRows(table.tablename)">Select first 100 rows...</li>
+									<li ng-click="selectTableRows(table.schemaname, table.tablename, 10)">Select first 10 rows...</li>
+									<li ng-click="selectTableRows(table.schemaname, table.tablename, 100)">Select first 100 rows...</li>
+									<li ng-click="selectTableRows(table.schemaname, table.tablename, 1000)">Select first 1,000 rows...</li>
 								</ul>
 							</div>
 						</div>
@@ -78,9 +93,13 @@
 							<div ng-if="!working">
 								<span ng-if="selectedQuery.command == 'SELECT'">Finished. Returned {{ selectedQuery.results.length }} rows.</span>
 								<span ng-if="selectedQuery.command == 'DELETE'">Finished. Deleted {{ selectedQuery.affectedRows }} rows.</span>
+								<span ng-if="selectedQuery.command == 'UPDATE'">Finished. Updated {{ selectedQuery.affectedRows }} rows.</span>
+								<span ng-if="selectedQuery.command == 'INSERT'">Finished. Inserted {{ selectedQuery.affectedRows }} rows.</span>
 							</div>
 						</span>
 						<button type="button" class="" ng-click="go()">Go</button>
+						<button type="button" class="" ng-click="copy()">Copy</button>
+						<button type="button" class="" ng-click="export()">Export</button>
 					</div>
 				</div>
 
@@ -98,8 +117,11 @@
 			<div class="modal" ng-class="{ visible: visible }">
 				<div class="modal-fade-screen">
 					<div class="modal-inner">
-						<!--<div class="modal-close" for="modal-1"></div>-->
+						<div class="modal-close" for="modal-1" ng-click="close()"></div>
 						<h1>Connection</h1>
+						<div class="flash flash-error" ng-if="error">
+						{{ error }}
+						</div>
 						<div class="form-field">
 							<input type="text" placeholder="Connection Name" ng-model="connection.name">
 						</div>

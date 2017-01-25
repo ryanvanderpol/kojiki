@@ -10,34 +10,33 @@ angular.module('kojiki').factory('ConnectionService', ['$rootScope', '$timeout',
                 this.session = null;
             }
 
-            ensureConnection(session){
-                console.log(session);
-                this.session = session;
-                if(!this.session.connection || !this.session.connection.isValid()){
-                    
-                    this.session.connection = this.session.connection || new Connection();
-
-                    return new Promise((reject, resolve) => {
-                        $rootScope.$on('connection.connected', (event, connection) => {
-                            resolve(connection);
-                        });
-                        this.editConnection(this.session.connection);
-                    });
-                }
-                else {
-                    return Promise.resolve(this.session.connection);
-                }
+            save(connection){
+                console.log(`[ConnectionService][${connection.name}] saving connection`);
+                SessionService.save();
+                $timeout(() => $rootScope.$broadcast('connection.save', connection));
             }
 
             connect(connection){
-                this.session.connection = connection;
-                console.log('saving connection');
-                SessionService.save();
-                $rootScope.$broadcast('connection.connected', this.session.connection);
+                return this.execute(connection, 'SELECT 1;')
+                    .then(() => $timeout(() => $rootScope.$broadcast('connection.reset', connection)));
             }
 
-            editConnection(connection){
-                $timeout(() => $rootScope.$broadcast('connection.edit', connection));
+            edit(connection){
+                return new Promise((resolve, reject) => {
+                    let handler = $rootScope.$on('connection.save', (event, connection) => {
+                        handler(); // unsubscribe
+                        resolve(connection);
+                    });
+                    $timeout(() => $rootScope.$broadcast('connection.edit', connection));
+                });
+            }
+
+            execute(connection, query){
+                return connection.getClient().query(query);
+            }
+
+            listTables(connection){
+                return connection.getClient().listTables();
             }
         }
 

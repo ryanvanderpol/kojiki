@@ -80,6 +80,7 @@ select {
 input[type="text"],
 input[type="password"] {
 	border: none;
+	border-left: 3px solid $light-gray;
 	box-shadow: none;
 
 	&:focus {

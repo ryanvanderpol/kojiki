@@ -8,18 +8,27 @@ angular.module('kojiki').directive('menu', () => {
         },
         link: function (scope, element) {
 
+            let $button = $(element).find('.dropdown-button');
+
             let hide = function($menu){
                 $menu.removeClass("show-menu");
             };
 
-            $(element).find('.dropdown-button').click(function() {
-                var $button, $menu;
-                $button = $(this);
-                $menu = $button.siblings(".dropdown-menu");
+            $button.click(event => {
+                
+                let $menu = $button.siblings(".dropdown-menu");
                 $menu.children("li").click(() => hide($menu));
-                //setTimeout(() => $(document.body).click(() => hide($menu)));
                 $menu.toggleClass("show-menu");
-              });
+
+                //event.stopImmediatePropagation();
+
+                $('html').click(e => {
+                    let parentButton = $(e.target).parents('.dropdown-button');
+                    if(!parentButton[0] || parentButton[0] != $button[0]){
+                        hide($menu);
+                    }
+                }); 
+            });
         }
     };
 });

@@ -6,28 +6,47 @@ const _ = require('underscore'),
       config = new (require('electron-config'))();
 
 
-angular.module('kojiki').controller('ConnectionController', ['$scope', '$rootScope', 'ConnectionService', function($scope, $rootScope, connectionService){
+angular.module('kojiki').controller('ConnectionController', ['$scope', '$rootScope', '$timeout', 'ConnectionService', function($scope, $rootScope, $timeout, ConnectionService){
     
     $scope.visible = false;
-
+    $scope.error = null;
     $scope.connection = null;
 
     $scope.save = function(){
+        $scope.error = null;
+
     	if($scope.connection.isUri){
-    		$scope.connection.parseUri($scope.connection.uri);
+            if($scope.connection.uri)
+        		$scope.connection.parseUri($scope.connection.uri);
+            else {
+                $scope.error = 'You must provide a valid URI';
+                return;
+            }
     	}
         if($scope.connection.isValid()){
-            connectionService.connect($scope.connection);
-            $scope.visible = false;
+            ConnectionService.connect($scope.connection)
+            .then(() => ConnectionService.save($scope.connection))
+            .then(() => $timeout(() => $scope.visible = false))
+            .catch(err => {
+                console.log(`[ConnectionController][${$scope.connection.name}] Error`, err);
+                $timeout(() => $scope.error = err.message);
+            });
         }
         else {
-            console.log('invalid connection');
+            $scope.error = 'Oops, something isn\'t right.';
+            console.log(`[ConnectionController][${$scope.connection.name}] Invalid connection`);
         }
+    };
+
+    $scope.close = function(){
+        $scope.visible = false;
+        $scope.error = null;
+        ConnectionService.save($scope.connection);
     };
 
     var init = function(){
         $scope.$on('connection.edit', (event, connection) => {
-            console.log('Editing connection', connection);
+            console.log(`[ConnectionController][${connection.name}] Editing connection`, connection);
             $scope.visible = true;
             $scope.connection = connection;
         });

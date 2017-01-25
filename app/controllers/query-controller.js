@@ -2,7 +2,12 @@ const _ = require('underscore'),
       $ = require('jquery'),
       Client = require('../../lib/data/client'),
       Query = require('../../lib/data/query'),
-      config = new (require('electron-config'))();
+      config = new (require('electron-config'))(),
+      moment = require('moment'),
+      fs = require('fs'),
+      {clipboard} = require('electron'),
+      {dialog} = require('electron').remote,
+      json2csv = require('json2csv');
 
 angular.module('kojiki').controller('QueryController', ['$scope', '$timeout', 'SessionService', function($scope, $timeout, SessionService){
     
@@ -29,9 +34,14 @@ angular.module('kojiki').controller('QueryController', ['$scope', '$timeout', 'S
         columnDefs: []
     };
 
-    $scope.$watch('selectedQuery.text', () => SessionService.save());
+    $scope.$watch('selectedQuery.text', (n, o) => {
+        if(n && o && n !== o){
+            //console.log('[QueryController] Query text changed', n, o); 
+            SessionService.save(); 
+        }
+    });
 
-    $scope.$watch('selectedQuery.results', () => {
+    $scope.$watch('selectedQuery.results', (n, o) => {
         if($scope.selectedQuery){
             if($scope.selectedQuery.columns){
                 $scope.gridOptions.columnDefs = [];
@@ -56,7 +66,7 @@ angular.module('kojiki').controller('QueryController', ['$scope', '$timeout', 'S
 
         $scope.working = true;
         $scope.client.query(query)
-              .tap(results => console.log(results))
+              .tap(results => console.log('[QueryController] Query results:', results))
               .then(results => $scope.readResults(results))
               .then(() => $timeout(() => { $scope.error = null; $scope.working = false; }))
               .catch(err => $timeout(() => $scope.onError(err)));
@@ -64,7 +74,7 @@ angular.module('kojiki').controller('QueryController', ['$scope', '$timeout', 'S
 
     $scope.onError = function(err){
         $scope.working = false;
-        console.log(err.toString());
+        console.log('[QueryController] Error:', err.toString());
         $scope.error = err.message;
     };
 
@@ -125,8 +135,6 @@ angular.module('kojiki').controller('QueryController', ['$scope', '$timeout', 'S
             $scope.connection = session.connection;
             $scope.client = $scope.connection.getClient();
 
-            console.log($scope.client.connection);
-
             if($scope.session.queries.length == 0){
                 $scope.addQuery();
             }
@@ -140,6 +148,16 @@ angular.module('kojiki').controller('QueryController', ['$scope', '$timeout', 'S
             $scope.go();
         });
 
+        $scope.$on('connection.error', (event, err) => {
+            $scope.onError(err);
+        });
+
+        $scope.$on('connection.reset', (event, connection) => {
+            console.log('[QueryController] received connection reset');
+            $scope.error = null;
+            $scope.working = false;
+        });
+
         $(window).on('resize', () => resizeGrid());
     };
 
@@ -150,6 +168,45 @@ angular.module('kojiki').controller('QueryController', ['$scope', '$timeout', 'S
 
     $scope.codemirrorLoaded = function(cm){
         $scope.codemirrorInstance = cm;
+    };
+
+    $scope.export = function(){
+
+        let options = {
+            title: 'Export Results',
+            defaultPath: moment().format('YYYYMMDD-HHmmss') + '-QueryResults.csv',
+            filters: [{ name: 'CSV', extensions: ['csv'] }]
+        };
+
+        dialog.showSaveDialog(options, fileName => {
+            if (fileName === undefined){
+                console.log("You didn't save the file");
+                return;
+            }
+
+            let fields = $scope.selectedQuery.columns.map(c => c.name);
+            
+            let data = $scope.selectedQuery.results;
+            let output = json2csv({ data: data, fields: fields });
+            
+            fs.writeFile(fileName, output, err => {
+                if(err){
+                    console.log("An error ocurred creating the file "+ err.message)
+                    return;
+                }
+                
+                console.log("The file has been succesfully saved");
+            });
+        }); 
+    };
+
+    $scope.copy = function(){
+        let fields = $scope.selectedQuery.columns.map(c => c.name);
+        
+        let data = $scope.selectedQuery.results;
+        let output = json2csv({ data: data, fields: fields });
+
+        clipboard.writeText(output);
     };
 
     init();

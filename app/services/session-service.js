@@ -20,7 +20,7 @@ angular.module('kojiki').factory('SessionService', ['$rootScope', '$timeout', fu
             }
 
             activate(session){
-                console.log('activating session', session);
+                console.log('[SessionService] Activating session', session);
                 this.activeSession = session;
                 $timeout(() => $rootScope.$broadcast('session.activate', session));
             }
@@ -30,22 +30,27 @@ angular.module('kojiki').factory('SessionService', ['$rootScope', '$timeout', fu
             }
 
             save(){
-                console.log('saving sessions');
+                console.log('[SessionService] Saving sessions');
                 config.set('sessions', this.sessions);
             }
 
             createSession(){
                 var session = new Session();
+                session.connection.isUri = true; // default to URIs
                 this.sessions.push(session);
                 this.save();
-                return session;
+                return Promise.resolve(session);
             }
 
             closeSession(session){
                 this.sessions = _.without(this.sessions, session);
+                this.save();
             }
 
             getActiveSession(){
+                if(this.sessions.indexOf(this.activeSession) < 0)
+                    this.activeSession = this.sessions[0];
+
                 return this.activeSession;
             }
 
