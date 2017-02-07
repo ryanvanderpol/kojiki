@@ -11,15 +11,6 @@
   "engines": {
     "node": "6.4.0"
   },
-  "repository": "https://github.com/electron/electron-quick-start",
-  "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
-  ],
-  "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^1.4.1",
     "gulp": "^3.9.1",
